@@ -11,10 +11,10 @@ import httpx
 
 @dataclass
 class CheckResult:  # pylint:disable=C0115
-    connection: int = -1
-    ttfb: int = -1
-    response: int = -1
-    status_code: int = -1
+    connection: Optional[int] = None
+    ttfb: Optional[int] = None
+    response: Optional[int] = None
+    status_code: Optional[int] = None
     content_check: Optional[bool] = None
     error_message: Optional[str] = None
 

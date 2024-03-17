@@ -12,7 +12,8 @@ async def test_checker_delays(http_server, ttfb, content, code):
         res = await check_url(f'http://127.0.0.1:{port}/status/{code}')
 
     assert res.status_code == code
-    assert res.connection <= res.ttfb <= res.response
+    assert None not in (res.connection, res.ttfb, res.response) and \
+        res.connection <= res.ttfb <= res.response  # type:ignore
     # BUG: due to httpcore limitation, no way to determine actual first byte timestamp
     # assert res.ttfb >= ttfb
     assert res.response >= content + ttfb
@@ -38,5 +39,5 @@ async def test_checker_unreachable():
 
     res = await check_url('http://125.125.0.1:1234/status', timeout=1, connect_timeout=1)
 
-    assert res.status_code == -1
+    assert res.status_code is None
     assert res.error_message
