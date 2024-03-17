@@ -1,0 +1,22 @@
+[db]
+# this section contains connect() arguments
+# https://magicstack.github.io/asyncpg/current/api/index.html#connection
+# except `cafile` option and `ssl`, which is auto set to required/verify-full
+host="pg-d640324-test-assignment.a.aivencloud.com"
+port=24666
+user="avnadmin"
+database="defaultdb"
+# this option is passed to SSL.create_default_context()
+cafile="db/ca.pem"
+# password is not recommended to keep here,
+# use .pgpass instead
+# specify full path to that file if location is not default:
+#passfile=~/my-pgpass
+timeout=10.0
+command_timeout=30.0
+direct_tls=true
+
+[timeouts]
+# HTTP request timeouts
+readwrite=5.0
+connection=10.0
