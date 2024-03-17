@@ -31,3 +31,8 @@ erDiagram
 ```mermaid
 
 ```
+
+## Configuration
+A single configuration file is used: [settings.toml](settings.toml)
+`db` section is used for database connection.
+`timeouts` -- to specify HTTP request timeouts.
