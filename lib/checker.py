@@ -21,7 +21,8 @@ class CheckResult:  # pylint:disable=C0115
 
 _logger = logging.getLogger(__name__)
 
-async def check_url(url: str, content_re: Optional[str] = None) -> CheckResult:
+async def check_url(url: str, content_re: Optional[str] = None,
+                    timeout: float = 5.0, connect_timeout: float = 10.0) -> CheckResult:
     '''
     Main URL checking worker routine
     '''
@@ -29,7 +30,7 @@ async def check_url(url: str, content_re: Optional[str] = None) -> CheckResult:
     result = CheckResult()
     tm0 = 0
 
-    async def _trace_times(event_name, info):
+    async def _trace_times(event_name, _):
         nonlocal tm0
 
         if event_name == 'connection.connect_tcp.started':
@@ -47,6 +48,8 @@ async def check_url(url: str, content_re: Optional[str] = None) -> CheckResult:
 
     async with httpx.AsyncClient(http2=True,
                                  follow_redirects=False,
+                                 timeout=httpx.Timeout(timeout,
+                                                         connect=connect_timeout)) as client:
         try:
             response = await client.get(url, extensions={'trace': _trace_times})
             result.status_code = response.status_code
