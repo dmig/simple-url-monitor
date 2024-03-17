@@ -1,7 +1,7 @@
 # PythonSWE-13.03.2024-dmig
-# A simple site availability monitor
+A simple site availability monitor
 
-# DB structure
+## DB structure
 ```mermaid
 erDiagram
     watchlist {
@@ -22,6 +22,12 @@ erDiagram
         int response "total response time (ms)"
         int status_code
         bool content_check "content regex run result"
+        varchar error_message
     }
     watchlist ||--o{ check_log : results
+```
+
+## App structure
+```mermaid
+
 ```

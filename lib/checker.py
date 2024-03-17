@@ -16,6 +16,7 @@ class CheckResult:  # pylint:disable=C0115
     response: int = -1
     status_code: int = -1
     content_check: Optional[bool] = None
+    error_message: Optional[str] = None
 
 
 _logger = logging.getLogger(__name__)
@@ -46,15 +47,20 @@ async def check_url(url: str, content_re: Optional[str] = None) -> CheckResult:
 
     async with httpx.AsyncClient(http2=True,
                                  follow_redirects=False,
-                                 timeout=httpx.Timeout(10.0, connect=30.0)) as client:
-        response = await client.get(url, extensions={'trace': _trace_times})
-        result.status_code = response.status_code
+        try:
+            response = await client.get(url, extensions={'trace': _trace_times})
+            result.status_code = response.status_code
 
-        if content_re:
-            try:
-                result.content_check = bool(re.search(content_re, response.text,
-                                                        re.MULTILINE | re.DOTALL))
-            except re.error as e:
-                _logger.error('Invalid content_re (%r): %s', content_re, e)
+            if content_re:
+                try:
+                    result.content_check = bool(re.search(content_re, response.text,
+                                                            re.MULTILINE | re.DOTALL))
+                except re.error as e:
+                    _logger.error('Invalid content_re (%r): %s', content_re, e)
+                    result.error_message = str(e)
+        except httpx.TransportError as e:
+            _logger.error('%r: %r', url, e)
+            # exception may have an empty message
+            result.error_message = str(e) or e.__class__.__name__
 
     return result
