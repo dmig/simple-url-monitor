@@ -30,3 +30,13 @@ async def test_checker_regex(http_server, code, regex, expect):
 
     assert res.status_code == code
     assert res.content_check == expect
+    assert expect is not None or res.error_message
+
+
+@pytest.mark.asyncio
+async def test_checker_unreachable():
+
+    res = await check_url('http://125.125.0.1:1234/status', timeout=1, connect_timeout=1)
+
+    assert res.status_code == -1
+    assert res.error_message
