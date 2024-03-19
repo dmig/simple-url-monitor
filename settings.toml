@@ -24,3 +24,11 @@ max_size=100
 # HTTP request timeouts
 readwrite=5.0
 connection=10.0
+
+
+[scheduler]
+# maximal number of concurently running tasks
+max_concurrency=100
+# main loop tick interval, in seconds
+# also limits scheduler granularity
+interval=5.0
