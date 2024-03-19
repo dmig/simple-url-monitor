@@ -1,0 +1,10 @@
+[Unit]
+Description="Simple URL checker service"
+
+[Service]
+ExecStart=service.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=network-online.target
