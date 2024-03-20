@@ -7,6 +7,12 @@ A simple site availability monitor
   - response can be streamed to temp file for use with external tool like `ripgrep` for regex checking
 - Results are written to DB 1-by-1, by worker coroutine
   - implementing result queue and watcher coroutine/thead to save results in bulk would increase throughput as well as complexity
+- _Time To First Byte_ is not precise and may be less than actual, due to the way `*.receive_response_headers.started` events in `httpcore` imlpemented
+- `check_log` DB table is created as a plain table without partitions -- no use for them in this demonstration, but for production usage it's better to have partitioning by month over `start` field. This also implies necessity of partition maintanance:
+  - by adding and configuring [pg_partman](https://github.com/pgpartman/pg_partman) extension
+  - or some trigger function for automatic partition creation
+  - or at least some cron job
+
 
 ## Configuration
 A single configuration file is used: [settings.toml](settings.toml)
