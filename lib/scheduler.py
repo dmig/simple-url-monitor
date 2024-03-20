@@ -8,7 +8,7 @@ from typing import Any, Optional
 
 import asyncpg
 
-from lib.db import pool
+from lib.db import get_pool
 from lib.checker import check_url
 
 _logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ async def main_loop(config: dict[str, Any]):
     semaphore = asyncio.Semaphore(int(config['scheduler']['max_concurrency']))
     background_tasks = set()
 
-    async with pool.acquire() as conn:
+    async with get_pool().acquire() as conn:
         watchlist_fetch = await conn.prepare(
             # NOTE: fields must match execute() parameters
             'SELECT id, url, content_rx, "interval" + EXTRACT(EPOCH FROM last_start) run_at '
@@ -75,7 +75,7 @@ async def _execute(semaphore: asyncio.Semaphore,
 
         end_time = time()
 
-        async with pool.acquire() as conn:
+        async with get_pool().acquire() as conn:
             # log check results
             await conn.execute(
                 'INSERT INTO check_log (wl_id, start, end, connect, ttfb, response, '

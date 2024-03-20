@@ -5,15 +5,15 @@ import ssl
 from typing import Optional
 import asyncpg
 
-pool: asyncpg.Pool
+_pool: asyncpg.Pool = None # type:ignore
 
 async def initialize_pool(cafile: Optional[str] = None, **connect_kwargs):
     '''
     Initialize asyncpg connection pool
     '''
-    global pool  # pylint:disable=W0603
+    global _pool  # pylint:disable=W0603
 
-    if pool:
+    if _pool:
         return
 
     if cafile:
@@ -26,4 +26,11 @@ async def initialize_pool(cafile: Optional[str] = None, **connect_kwargs):
 
     connect_kwargs['ssl'] = sslctx
 
-    pool = await asyncpg.create_pool(**connect_kwargs)  # type: ignore
+    _pool = await asyncpg.create_pool(**connect_kwargs)  # type: ignore
+
+
+def get_pool():
+    '''
+    DB Pool instance wrapper
+    '''
+    return _pool
