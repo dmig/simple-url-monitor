@@ -12,7 +12,6 @@ database="defaultdb"
 #passfile=~/my-pgpass
 timeout=10.0
 command_timeout=30.0
-direct_tls=true
 # this option is passed to SSL.create_default_context()
 cafile="db/ca.pem"
 
