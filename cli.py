@@ -36,7 +36,7 @@ def _get_arguments(config):
         return value.strip()
 
     arguments = argparse.ArgumentParser(description='Simple CLI for URL checker service')
-    action = arguments.add_subparsers(dest='action')
+    action = arguments.add_subparsers(dest='action', required=True)
 
     action.add_parser('list', help='list urls')
 
@@ -50,7 +50,9 @@ def _get_arguments(config):
         help=f'Check interval (seconds), {config["scheduler"]["interval"]}..300',
         type=interval,
     )
-    act_add.add_argument('content_rx', help='Content check regex', nargs='?', type=regex)
+    act_add.add_argument(
+        'content_rx', help='Content check regex', nargs='?', type=regex, metavar='regex'
+    )
 
     act_rem = action.add_parser('remove', help='remove url')
     act_rem.add_argument('id', help='Record ID', type=int)
@@ -65,7 +67,8 @@ def _get_arguments(config):
 
     act_upd_re = act_upd.add_mutually_exclusive_group()
     act_upd_re.add_argument(
-        '-r', '--regex', help='Update content regex', nargs=1, dest='content_rx', type=regex
+        '-r', '--regex', help='Update content regex', nargs=1, dest='content_rx', type=regex,
+        metavar='REGEX'
     )
     act_upd_re.add_argument(
         '-R',
