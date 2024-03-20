@@ -2,7 +2,8 @@
 Description="Simple URL checker service"
 
 [Service]
-ExecStart=service.py
+ExecStart=/path/to/project/.venv/bin/python3 /path/to/project/service.py
+Type=simple
 Restart=always
 
 [Install]
