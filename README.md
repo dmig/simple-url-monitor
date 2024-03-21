@@ -33,9 +33,9 @@ Actions:
   - `-i value` -- update interval
 
 
-## Limitations
+## Limitations & what could be better
 - Server response always loaded in memory -- may cause problems with large responses
-  - this might be handled by using HEAD requests, when content check is not needed (unreliable though)
+  - this might be handled by using HEAD requests, when content check is not needed (unreliable though -- not all servers correctly handle them)
   - response can be streamed to a temp file for use with external tool like `ripgrep` for regex checking
 - Results are written to DB 1-by-1, by worker coroutine
   - implementing result queue and watcher coroutine/thead to save results in bulk would increase throughput as well as complexity
