@@ -90,7 +90,6 @@ erDiagram
         varchar content_rx "optional content regex"
         unsigned interval "run interval in seconds"
         timestamp last_start "simple scheduling helpers"
-        timestamp last_end "simple scheduling helpers"
     }
     check_log {
         int wl_id PK, FK

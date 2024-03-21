@@ -4,8 +4,7 @@ create table if not exists watchlist (
     url varchar(2048) not null,
     content_rx varchar(2048),
     interval integer not null,
-    last_start timestamp,
-    last_end timestamp
+    last_start timestamp
 );
 
 create table if not exists check_log (

@@ -132,7 +132,7 @@ async def action_list():
     list_tpl = '{:>10} {:>1.1} {:>3.3} {:19.19} {:19.19} {:40.40} {:20.20}'
     async with get_pool().acquire() as conn:
         data = await conn.fetch(
-            'SELECT id, enable, interval, last_start, last_end, url, content_rx '
+            'SELECT id, enable, interval, last_start, url, content_rx '
             'FROM watchlist'
         )
         if not data:
@@ -147,7 +147,7 @@ async def action_list():
 async def action_show(id: int):
     async with get_pool().acquire() as conn:
         record = await conn.fetchrow(
-            'SELECT id, enable, interval, last_start, last_end, url, content_rx '
+            'SELECT id, enable, interval, last_start, url, content_rx '
             'FROM watchlist WHERE id = $1', id
         )
         if not record:

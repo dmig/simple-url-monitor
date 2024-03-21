@@ -29,7 +29,7 @@ async def main_loop(config: dict[str, Any]):
             'FROM watchlist '
             'WHERE enable '
             # pick never ran...
-            'AND ((last_start IS NULL AND last_end IS NULL) '
+            'AND (last_start IS NULL '
             # ...or to be run within current scheduler tick
             'OR (last_start < to_timestamp($1 - "interval"))) '
             # NULLS FIRST makes sure never executed tasks will run first
@@ -88,7 +88,7 @@ async def _execute(semaphore: asyncio.Semaphore,
             # update scheduler fields
             await conn.execute(
                 'UPDATE watchlist '
-                'SET last_start = to_timestamp($1), last_end = to_timestamp($2) '
-                'WHERE id = $3',
-                start_time, end_time, id
+                'SET last_start = to_timestamp($1) '
+                'WHERE id = $2',
+                start_time, id
             )
