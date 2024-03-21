@@ -14,6 +14,7 @@ timeout=10.0
 command_timeout=30.0
 # this option is passed to SSL.create_default_context()
 cafile="db/ca.pem"
+passfile="db/.pgpass"
 
 # Connection pool parameters
 min_size=1

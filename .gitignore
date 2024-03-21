@@ -2,3 +2,4 @@
 *.pyc
 .vscode
 .pytest_cache
+db/.pgpass

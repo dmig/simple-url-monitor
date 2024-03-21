@@ -2,6 +2,10 @@
 A simple site availability monitor
 
 ## Installation
+First, set up DB credentials using one of:
+- create a `db/.pgpass` file (https://www.postgresql.org/docs/15/libpq-pgpass.html) with database credentials
+- set environment variable `PGPASSWORD` with database password
+- add `password` to the `db` section of [settings.toml]
 ### Manual
 - checkout project code to some path (e.g. `/home/user/url_checker`)
 - create and activate virtualenv `python3 -m venv .venv && source .venv/bin/activate`
