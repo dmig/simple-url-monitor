@@ -25,9 +25,9 @@ async def main_loop(config: dict[str, Any]):
     async with get_pool().acquire() as conn:
         watchlist_fetch = await conn.prepare(
             # NOTE: fields must match execute() parameters
-            'SELECT id, url, content_rx, "interval" + EXTRACT(EPOCH FROM last_start) run_at '
+            'SELECT id, url, content_rx, ("interval" + EXTRACT(EPOCH FROM last_start))::int run_at '
             'FROM watchlist '
-            'WHERE enabled '
+            'WHERE enable '
             # pick never ran...
             'AND ((last_start IS NULL AND last_end IS NULL) '
             # ...or to be run within current scheduler tick
@@ -38,12 +38,13 @@ async def main_loop(config: dict[str, Any]):
 
         while True:
             tick_start = time()
-            record: asyncpg.Record
-            async for record in watchlist_fetch.cursor(tick_start + interval):
-                task = asyncio.create_task(_execute(semaphore, **dict(record.items())))
-                # a workaround for https://github.com/python/cpython/issues/88831
-                background_tasks.add(task)
-                task.add_done_callback(background_tasks.discard)
+            async with conn.transaction():
+                record: asyncpg.Record
+                async for record in watchlist_fetch.cursor(tick_start + interval):
+                    task = asyncio.create_task(_execute(semaphore, **dict(record.items())))
+                    # a workaround for https://github.com/python/cpython/issues/88831
+                    background_tasks.add(task)
+                    task.add_done_callback(background_tasks.discard)
 
             tick_elapsed = time() - tick_start
 
@@ -78,11 +79,11 @@ async def _execute(semaphore: asyncio.Semaphore,
         async with get_pool().acquire() as conn:
             # log check results
             await conn.execute(
-                'INSERT INTO check_log (wl_id, start, end, connect, ttfb, response, '
+                'INSERT INTO check_log (wl_id, "start", "end", connect, ttfb, response, '
                 'status_code, content_check, error_message) '
                 'VALUES ($1, to_timestamp($2), to_timestamp($3), $4, $5, $6, $7, $8, $9)',
                 id, start_time, end_time, result.connection, result.ttfb, result.response,
-                result.status_code, result.error_message
+                result.status_code, result.content_check, result.error_message
             )
             # update scheduler fields
             await conn.execute(
