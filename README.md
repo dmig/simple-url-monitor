@@ -14,6 +14,7 @@ For systemd management:
 - Run it `docker run url-checker`
 
 ## CLI
+A simple UI to the service.
 Usage: `cli.py` _action_
 Actions:
 - `list` -- show list of all scheduled urls and their parameters
@@ -77,6 +78,38 @@ flowchart TB
     w1 --> db
     w2 --> db
     w3 --> db
+```
+
+## Scheduler implementation
+### Main loop
+```mermaid
+flowchart TB
+  a["Get next tick time (NTT)"]
+  b[/"Get records from `watchlist` which have `last_start` empty, or `last_start` + `interval` < NTT"/]
+  c["For each record spawn a worker"]
+  d["Worker 1"]
+  e["Worker 2"]
+  f["Worker n"]
+  g["Sleep until the end of tick (NTT)"]
+  a --> b
+  b --> c
+  c -.-> d
+  c -.-> e
+  c -.-> f
+  c --> g
+  g --> a
+
+```
+### Worker
+```mermaid
+flowchart TB
+  a("Wait on semaphore (concurrency limit)")
+  b("Sleep until exact run time")
+  c[["Perform HTTP request"]]
+  d[/"Save log record to DB"/]
+  a --> b
+  b --> c
+  c --> d
 ```
 
 
