@@ -18,8 +18,8 @@ async def main_loop(config: dict[str, Any]):
     '''
     Scheduler main loop routine
     '''
-    interval = float(config['scheduler']['interval'])
-    semaphore = asyncio.Semaphore(int(config['scheduler']['max_concurrency']))
+    interval = float(config['interval'])
+    semaphore = asyncio.Semaphore(int(config['max_concurrency']))
     background_tasks = set()
 
     async with get_pool().acquire() as conn:

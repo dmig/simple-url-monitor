@@ -28,4 +28,4 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.set_exception_handler(_task_exception_handler)
     loop.run_until_complete(initialize_pool(**config['db']))
-    loop.run_until_complete(main_loop(config))
+    loop.run_until_complete(main_loop(config['scheduler']))
