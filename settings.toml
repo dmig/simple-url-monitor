@@ -2,9 +2,8 @@
 # this section contains scalar create_pool() arguments
 # except `cafile` option and `ssl` which is auto set to `required`/`verify-full`
 # see https://magicstack.github.io/asyncpg/current/api/index.html#connection-pools
-host="pg-d640324-test-assignment.a.aivencloud.com"
-port=24666
-user="avnadmin"
+host="localhost"
+user="monitor"
 database="defaultdb"
 # password is not recommended to keep here,
 # use .pgpass instead
@@ -13,8 +12,8 @@ database="defaultdb"
 timeout=10.0
 command_timeout=30.0
 # this option is passed to SSL.create_default_context()
-cafile="db/ca.pem"
-passfile="db/.pgpass"
+#cafile="db/ca.pem"
+#passfile="db/.pgpass"
 
 # Connection pool parameters
 min_size=1
@@ -24,7 +23,6 @@ max_size=100
 # HTTP request timeouts
 readwrite=5.0
 connection=10.0
-
 
 [scheduler]
 # maximal number of concurently running tasks
