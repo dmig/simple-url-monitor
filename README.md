@@ -1,18 +1,29 @@
-# PythonSWE-13.03.2024-dmig
-A simple site availability monitor
+# Simple URL checker
+A simple site availability monitor coding challenge.
+
+## Problem
+Implement a program that monitors the availability of many websites over the network, produces metrics about these and stores the metrics into a PostgreSQL database.
+
+The website monitor should perform the checks periodically and collect the request timestamp, the response time, the HTTP status code, as well as optionally checking the returned page contents for a regex pattern that is expected to be found on the page. Each URL should be checked periodically, with the ability to configure the interval (between 5 and 300 seconds) and the regexp on a per-URL basis. The monitored URLs can be anything found online.
+In case the check fails the details of the failure should be logged into the database.
 
 ## Installation
-First, set up DB credentials using one of:
-- create a `db/.pgpass` file (https://www.postgresql.org/docs/15/libpq-pgpass.html) with database credentials
+First, set up DB and add its credentials using one of:
+- create a `db/.pgpass` file (https://www.postgresql.org/docs/15/libpq-pgpass.html) with database credentials and uncomment `passfile` option in the `db` section of [settings.toml](settings.toml)
 - set environment variable `PGPASSWORD` with database password
-- add `password` to the `db` section of [settings.toml]
+- add `password` to the `db` section of [settings.toml](settings.toml)
+
+also don't forget to set `host`, `user`, and if needed, `port` and `cafile` options in the `db` section of [settings.toml](settings.toml)
+
 ### Manual
 - checkout project code to some path (e.g. `/home/user/url_checker`)
 - create and activate virtualenv `python3 -m venv .venv && source .venv/bin/activate`
 - install dependendencies `pip install -r requirements.txt`
 - run `service.py`
+
 For systemd management:
 - edit included `url-checker.service` file: on line `ExecStart=/path/to/project/.venv/bin/python3 /path/to/project/service.py` replace `/path/to/project/` with a real path (e.g. `/home/user/url_checker`)
+- install the unit (preferrably to `~/.config/systemd/user/`), reload daemon and start the service
 ### Using Docker
 - Build a container `docker build -t url-checker .`
 - Run it `docker run url-checker`
